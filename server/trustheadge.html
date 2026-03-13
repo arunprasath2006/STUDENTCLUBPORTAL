@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TrustLedger — The Killer Idea</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+:root {
+  --ink: #0A0A08; --paper: #F5F0E8; --cream: #EDE8DC;
+  --gold: #C8960C; --red: #C0392B; --green: #1A6B3C;
+  --blue: #1A3A6B; --muted: #7A7060; --rule: #C8B89A;
+}
+html { scroll-behavior: smooth; }
+body { background: var(--paper); color: var(--ink); font-family: 'Crimson Pro', Georgia, serif; font-size: 18px; line-height: 1.7; overflow-x: hidden; }
+body::before { content: ''; position: fixed; inset: 0; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E"); pointer-events: none; z-index: 999; }
+.page { max-width: 860px; margin: 0 auto; padding: 4rem 3rem; }
+.masthead { text-align: center; border-bottom: 3px double var(--rule); padding-bottom: 2rem; animation: fadeIn 1s ease both; }
+.masthead-top { font-family: 'DM Mono', monospace; font-size: 0.6rem; letter-spacing: 0.2em; color: var(--muted); text-transform: uppercase; margin-bottom: 1.2rem; display: flex; justify-content: space-between; }
+.masthead-top span { color: var(--red); }
+.masthead h1 { font-family: 'Bebas Neue', sans-serif; font-size: clamp(5rem, 15vw, 10rem); line-height: 0.9; letter-spacing: 0.02em; }
+.masthead h1 em { font-style: normal; color: var(--gold); }
+.masthead .deck { font-size: 1rem; color: var(--muted); font-style: italic; margin-top: 0.8rem; }
+.pull-bar { background: var(--ink); color: var(--paper); text-align: center; padding: 1.4rem 2rem; margin: 0 -3rem; font-family: 'Bebas Neue', sans-serif; font-size: 1.4rem; letter-spacing: 0.08em; animation: fadeIn 1s 0.15s ease both; }
+.pull-bar span { color: var(--gold); }
+.editorial { display: grid; grid-template-columns: 1fr 1fr; gap: 2.5rem; padding: 2.5rem 0; border-bottom: 1px solid var(--rule); animation: fadeIn 1s 0.3s ease both; }
+.editorial.wide { grid-template-columns: 3fr 2fr; }
+.section-kicker { font-family: 'DM Mono', monospace; font-size: 0.6rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--red); border-bottom: 1px solid var(--red); padding-bottom: 0.3rem; margin-bottom: 0.7rem; display: inline-block; }
+.section-hed { font-family: 'Bebas Neue', sans-serif; font-size: 2.2rem; line-height: 1.0; letter-spacing: 0.03em; margin-bottom: 0.8rem; }
+.section-hed.gold { color: var(--gold); } .section-hed.blue { color: var(--blue); } .section-hed.red { color: var(--red); }
+p { margin-bottom: 0.9rem; font-size: 1rem; color: #2A2520; }
+p:last-child { margin-bottom: 0; }
+strong { font-weight: 600; color: var(--ink); }
+.dropcap::first-letter { font-family: 'Bebas Neue', sans-serif; font-size: 4.5rem; line-height: 0.75; float: left; margin-right: 0.1em; margin-top: 0.05em; color: var(--gold); }
+.sidebar-box { background: var(--cream); border: 1px solid var(--rule); border-left: 4px solid var(--gold); padding: 1.5rem; }
+.sidebar-box .sb-title { font-family: 'Bebas Neue', sans-serif; font-size: 1.2rem; letter-spacing: 0.05em; margin-bottom: 0.8rem; color: var(--blue); }
+.sidebar-box ul { list-style: none; padding: 0; }
+.sidebar-box ul li { font-size: 0.88rem; padding: 0.4rem 0; border-bottom: 1px dotted var(--rule); display: flex; gap: 0.5rem; align-items: flex-start; color: #2A2520; line-height: 1.4; }
+.sidebar-box ul li:last-child { border-bottom: none; }
+.sidebar-box ul li .bullet { color: var(--gold); font-weight: 700; flex-shrink: 0; font-family: 'DM Mono', monospace; font-size: 0.8rem; margin-top: 0.1rem; }
+.code-block { background: var(--ink); color: #A8D8A8; font-family: 'DM Mono', monospace; font-size: 0.72rem; line-height: 1.8; padding: 1.2rem 1.4rem; border-left: 3px solid var(--green); margin: 1rem 0; overflow-x: auto; }
+.code-block .c-dim { color: #556655; } .code-block .c-key { color: #88CCFF; } .code-block .c-val { color: #FFD080; }
+.alert-box { background: #FFF5F5; border: 1px solid #ECC; border-left: 4px solid var(--red); padding: 1.2rem 1.4rem; margin: 1rem 0; font-family: 'DM Mono', monospace; font-size: 0.72rem; line-height: 1.8; }
+.alert-box .a-title { color: var(--red); font-weight: 500; font-size: 0.78rem; margin-bottom: 0.3rem; }
+.alert-box .a-row { color: #555; }
+.alert-box .a-risk { color: var(--red); font-weight: 500; }
+.arch-wrap { background: var(--cream); border: 1px solid var(--rule); padding: 1.5rem; margin: 1.5rem 0; }
+.arch-wrap .arch-title { font-family: 'DM Mono', monospace; font-size: 0.58rem; letter-spacing: 0.15em; color: var(--muted); text-transform: uppercase; text-align: center; margin-bottom: 1.2rem; padding-bottom: 0.8rem; border-bottom: 1px dotted var(--rule); }
+.arch-layers { display: flex; flex-direction: column; gap: 2px; }
+.arch-row { display: flex; gap: 2px; align-items: stretch; }
+.arch-tag { background: var(--ink); color: var(--paper); font-family: 'DM Mono', monospace; font-size: 0.48rem; letter-spacing: 0.12em; text-transform: uppercase; writing-mode: vertical-rl; transform: rotate(180deg); padding: 0.6rem 0.4rem; display: flex; align-items: center; justify-content: center; min-width: 22px; flex-shrink: 0; }
+.arch-cells { flex: 1; display: flex; gap: 2px; }
+.arch-cell { flex: 1; background: white; border: 1px solid var(--rule); padding: 0.6rem 0.7rem; transition: background 0.15s; }
+.arch-cell:hover { background: #FFF8EC; }
+.arch-cell .ac-name { font-family: 'Bebas Neue', sans-serif; font-size: 0.82rem; letter-spacing: 0.03em; margin-bottom: 0.2rem; color: var(--blue); }
+.arch-cell.hl .ac-name { color: var(--gold); } .arch-cell.danger .ac-name { color: var(--red); } .arch-cell.safe .ac-name { color: var(--green); }
+.arch-cell .ac-desc { font-family: 'DM Mono', monospace; font-size: 0.52rem; color: var(--muted); line-height: 1.5; }
+.arch-arrow-row { text-align: center; padding: 0.15rem 0; font-family: 'DM Mono', monospace; font-size: 0.58rem; color: var(--muted); letter-spacing: 0.3em; }
+.sprint-table { width: 100%; border-collapse: collapse; font-size: 0.88rem; margin: 1rem 0; }
+.sprint-table th { background: var(--ink); color: var(--paper); font-family: 'Bebas Neue', sans-serif; font-size: 0.9rem; letter-spacing: 0.08em; padding: 0.6rem 0.8rem; text-align: left; }
+.sprint-table td { padding: 0.6rem 0.8rem; border-bottom: 1px solid var(--rule); vertical-align: top; font-size: 0.85rem; color: #2A2520; }
+.sprint-table tr:nth-child(even) td { background: var(--cream); }
+.sprint-table td:first-child { font-family: 'DM Mono', monospace; font-size: 0.7rem; color: var(--gold); font-weight: 500; white-space: nowrap; }
+.sprint-table td:nth-child(2) { font-family: 'Bebas Neue', sans-serif; font-size: 0.95rem; letter-spacing: 0.03em; color: var(--blue); }
+.win-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1px; background: var(--rule); border: 1px solid var(--rule); margin: 1.5rem 0; }
+.win-cell { background: var(--paper); padding: 1.2rem; transition: background 0.15s; }
+.win-cell:hover { background: var(--cream); }
+.win-cell .wc-num { font-family: 'Bebas Neue', sans-serif; font-size: 2.5rem; color: var(--rule); line-height: 1; margin-bottom: 0.3rem; }
+.win-cell .wc-title { font-family: 'Bebas Neue', sans-serif; font-size: 1rem; letter-spacing: 0.04em; color: var(--ink); margin-bottom: 0.4rem; }
+.win-cell p { font-size: 0.78rem; color: var(--muted); line-height: 1.55; }
+.pull-quote { border-top: 3px solid var(--ink); border-bottom: 3px solid var(--ink); padding: 1.5rem 0; margin: 2rem 0; text-align: center; }
+.pull-quote blockquote { font-size: 1.4rem; font-style: italic; font-weight: 300; line-height: 1.4; color: var(--ink); max-width: 600px; margin: 0 auto; }
+.pull-quote cite { display: block; font-family: 'DM Mono', monospace; font-size: 0.6rem; letter-spacing: 0.15em; color: var(--muted); margin-top: 0.8rem; font-style: normal; text-transform: uppercase; }
+.tech-row { display: flex; flex-wrap: wrap; gap: 0.4rem; margin: 0.8rem 0; }
+.tech-pill { font-family: 'DM Mono', monospace; font-size: 0.6rem; letter-spacing: 0.06em; padding: 0.25rem 0.6rem; border: 1px solid var(--rule); color: var(--muted); background: var(--cream); }
+.tech-pill.gold { border-color: var(--gold); color: var(--gold); background: #FFFBF0; }
+.tech-pill.blue { border-color: var(--blue); color: var(--blue); background: #F0F3FA; }
+.tech-pill.red  { border-color: var(--red);  color: var(--red);  background: #FFF5F5; }
+.tech-pill.green{ border-color: var(--green);color: var(--green);background: #F0FAF4; }
+footer { border-top: 3px double var(--rule); padding-top: 2rem; margin-top: 2rem; display: flex; justify-content: space-between; font-family: 'DM Mono', monospace; font-size: 0.58rem; letter-spacing: 0.1em; color: var(--muted); text-transform: uppercase; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
+@media(max-width:700px) {
+  .page { padding: 2rem 1.2rem; }
+  .editorial, .editorial.wide { grid-template-columns: 1fr; }
+  .win-grid { grid-template-columns: 1fr; }
+  .pull-bar { margin: 0 -1.2rem; font-size: 1rem; }
+  .masthead h1 { font-size: 4rem; }
+  footer { flex-direction: column; gap: 0.5rem; }
+}
+</style>
+</head>
+<body>
+<div class="page">
+
+  <div class="masthead">
+    <div class="masthead-top">
+      <span>SAMHITA HACKATHON 2026</span>
+      <span style="color:var(--muted)">MARCH 7 · 8-HOUR SPRINT</span>
+      <span>TRUST &amp; PRIVACY · ENTERPRISE SYSTEMS</span>
+    </div>
+    <h1>TRUST<em>LEDGER</em></h1>
+    <p class="deck">The enterprise security black box that makes data misuse impossible to hide</p>
+  </div>
+
+  <div class="pull-bar">
+    THE BIGGEST THREAT TO ENTERPRISE DATA IS <span>NOT HACKERS</span> — IT IS INSIDERS
+  </div>
+
+  <!-- PROBLEM -->
+  <div class="editorial wide">
+    <div>
+      <span class="section-kicker">The Problem</span>
+      <h2 class="section-hed">Every company has a trust gap. Nobody is watching it.</h2>
+      <p class="dropcap">Inside every enterprise, employees access sensitive data hundreds of times a day — financial records, patient files, payroll data. Most of that access is legitimate. Some of it isn't. The terrifying part? Nobody knows the difference.</p>
+      <p>Traditional systems <strong>record events but never analyse them.</strong> Logs pile up in a database that the very admin you're trying to audit can edit or delete. When a breach happens, the answer to "who accessed this?" is almost always: <em>we don't know.</em></p>
+      <p>This is the Trust Gap. It exists in every hospital, bank, and enterprise. It is legal liability and compliance nightmare — sitting silently, waiting.</p>
+    </div>
+    <div>
+      <div class="sidebar-box">
+        <div class="sb-title">Real Examples of This Gap</div>
+        <ul>
+          <li><span class="bullet">→</span>An analyst downloads 400 financial records in 2 minutes. Nobody notices for 6 months.</li>
+          <li><span class="bullet">→</span>A nurse views celebrity patient files out of curiosity. HIPAA violation. $1.9M fine.</li>
+          <li><span class="bullet">→</span>A developer queries production DB at 2 AM. Detected weeks later.</li>
+          <li><span class="bullet">→</span>Exiting employee bulk-exports client data the day before resignation. No alert fires.</li>
+        </ul>
+      </div>
+      <div style="margin-top:1rem; padding:1rem; border:1px solid var(--rule); background:var(--cream); text-align:center;">
+        <div style="font-family:'Bebas Neue',sans-serif; font-size:2.8rem; color:var(--red); line-height:1;">60%</div>
+        <div style="font-family:'DM Mono',monospace; font-size:0.6rem; color:var(--muted); letter-spacing:0.1em; margin-top:0.3rem;">OF DATA BREACHES INVOLVE INSIDERS<br><span style="color:var(--rule)">— IBM COST OF BREACH REPORT</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- THE IDEA -->
+  <div style="padding:2.5rem 0; border-bottom:1px solid var(--rule); animation:fadeIn 1s 0.4s ease both;">
+    <span class="section-kicker">The Idea</span>
+    <h2 class="section-hed gold" style="font-size:3rem;">TrustLedger: The Black Box for Enterprise Data</h2>
+    <div class="pull-quote">
+      <blockquote>"Like an airplane's flight recorder — but for every sensitive record your employees ever touch."</blockquote>
+      <cite>Core Concept · Samhita Hackathon 2026</cite>
+    </div>
+    <div class="editorial" style="border:none; padding:0; animation:none;">
+      <div>
+        <p>TrustLedger is a <strong>security intelligence layer</strong> that wraps around any enterprise system. Every data access — who, what, when, from where — is captured, cryptographically chained, and fed into an AI engine that watches for patterns no human could detect manually.</p>
+        <p>The result: a tamper-proof record of everything that happened to your sensitive data, with an AI that raises the alarm the moment behaviour crosses the line — <strong>automatically, in real time, before damage is done.</strong></p>
+      </div>
+      <div>
+        <div class="sidebar-box">
+          <div class="sb-title">Three Properties That Win</div>
+          <ul>
+            <li><span class="bullet" style="color:var(--gold);">1.</span><strong>Immutable chain</strong> — no admin can erase evidence</li>
+            <li><span class="bullet" style="color:var(--gold);">2.</span><strong>AI anomaly scoring</strong> — patterns humans miss, caught instantly</li>
+            <li><span class="bullet" style="color:var(--gold);">3.</span><strong>PII-anonymized logs</strong> — audit without creating a second leak</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- HOW IT WORKS -->
+  <div style="padding:2.5rem 0; border-bottom:1px solid var(--rule); animation:fadeIn 1s 0.5s ease both;">
+    <span class="section-kicker">How It Works</span>
+    <h2 class="section-hed blue">Three Engines. One System.</h2>
+    <div class="editorial" style="border:none; padding:1rem 0 0; animation:none; gap:2rem;">
+      <div>
+        <h3 style="font-family:'Bebas Neue',sans-serif; font-size:1.3rem; color:var(--blue); margin-bottom:0.5rem;">① Controlled Access Layer</h3>
+        <p style="font-size:0.9rem;">All sensitive data is accessed through a single authenticated API gateway. JWT tokens enforce who can access what. Every query passes through TrustLedger first — no direct DB access ever.</p>
+
+        <h3 style="font-family:'Bebas Neue',sans-serif; font-size:1.3rem; color:var(--green); margin:1rem 0 0.5rem;">② Tamper-Proof Audit Chain</h3>
+        <p style="font-size:0.9rem;">Every access event is written as an immutable log entry, chained to the previous via SHA-256. Edit any entry and every subsequent hash breaks — <strong>mathematical proof of tampering.</strong></p>
+        <div class="code-block">
+<span class="c-dim"># Every access writes one entry</span>
+<span class="c-key">user</span>:      <span class="c-val">analyst_24</span>  <span class="c-dim">(pseudonymized)</span>
+<span class="c-key">action</span>:    <span class="c-val">READ financial_record #8821</span>
+<span class="c-key">time</span>:      <span class="c-val">2026-03-07  10:41:33</span>
+<span class="c-key">prev_hash</span>: <span class="c-val">9a12cd4f8b...</span>
+<span class="c-key">curr_hash</span>: <span class="c-val">8fd21ab7c3...</span>  <span class="c-dim">← breaks if tampered</span></div>
+
+        <h3 style="font-family:'Bebas Neue',sans-serif; font-size:1.3rem; color:var(--red); margin:1rem 0 0.5rem;">③ AI Anomaly Detection</h3>
+        <p style="font-size:0.9rem;">An Isolation Forest model trains on baseline patterns. Access frequency, time of day, data type, volume — all become features. Deviations score a risk level. No human needed.</p>
+        <div class="alert-box">
+          <div class="a-title">⚠  SUSPICIOUS ACTIVITY DETECTED</div>
+          <div class="a-row">User:    analyst_24</div>
+          <div class="a-row">Reason:  400 records accessed in 2 minutes</div>
+          <div class="a-row">Normal:  ~12 records / hour (baseline)</div>
+          <div class="a-risk">Risk:    ██████████  CRITICAL</div>
+          <div class="a-row" style="margin-top:0.3rem; color:#888;">→ Compliance officer notified · Session flagged</div>
+        </div>
+      </div>
+
+      <div>
+        <div class="arch-wrap">
+          <div class="arch-title">TrustLedger — System Architecture</div>
+          <div class="arch-layers">
+            <div class="arch-row">
+              <div class="arch-tag">User</div>
+              <div class="arch-cells">
+                <div class="arch-cell"><div class="ac-name">Enterprise App / Portal</div><div class="ac-desc">HR, Finance, EMR — zero code change needed</div></div>
+                <div class="arch-cell"><div class="ac-name">Audit Dashboard</div><div class="ac-desc">React UI · live alerts · log explorer · heatmap</div></div>
+              </div>
+            </div>
+            <div class="arch-arrow-row">▼  all traffic routed through  ▼</div>
+            <div class="arch-row">
+              <div class="arch-tag">Gate</div>
+              <div class="arch-cells">
+                <div class="arch-cell hl" style="flex:2"><div class="ac-name">FastAPI Proxy + JWT Auth Gate</div><div class="ac-desc">Single entry point. Validates identity, enforces RBAC, captures event metadata async.</div></div>
+              </div>
+            </div>
+            <div class="arch-arrow-row">▼  parallel async processing pipeline  ▼</div>
+            <div class="arch-row">
+              <div class="arch-tag">Process</div>
+              <div class="arch-cells">
+                <div class="arch-cell danger"><div class="ac-name">PII Anonymizer</div><div class="ac-desc">Presidio strips identifiers before logging. No raw names ever stored.</div></div>
+                <div class="arch-cell danger"><div class="ac-name">SHA-256 Chain</div><div class="ac-desc">Hash of event + prev hash. Tamper-evident by math.</div></div>
+                <div class="arch-cell danger"><div class="ac-name">AI Engine</div><div class="ac-desc">Isolation Forest. Risk score. WebSocket alert push.</div></div>
+              </div>
+            </div>
+            <div class="arch-arrow-row">▼  write to immutable store  ▼</div>
+            <div class="arch-row">
+              <div class="arch-tag">Store</div>
+              <div class="arch-cells">
+                <div class="arch-cell safe" style="flex:2"><div class="ac-name">Append-Only Ledger (PostgreSQL — INSERT only)</div><div class="ac-desc">No UPDATE / DELETE permissions. No admin can purge the trail.</div></div>
+                <div class="arch-cell safe"><div class="ac-name">Encrypted DB</div><div class="ac-desc">Original data — AES-256 at rest. Untouched.</div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div style="margin-top:1rem;">
+          <div style="font-family:'DM Mono',monospace; font-size:0.58rem; letter-spacing:0.15em; color:var(--muted); text-transform:uppercase; margin-bottom:0.5rem;">Full Tech Stack</div>
+          <div class="tech-row">
+            <span class="tech-pill blue">FastAPI</span>
+            <span class="tech-pill blue">PostgreSQL</span>
+            <span class="tech-pill blue">JWT / RBAC</span>
+            <span class="tech-pill red">Scikit-learn</span>
+            <span class="tech-pill red">Isolation Forest</span>
+            <span class="tech-pill red">Presidio PII</span>
+            <span class="tech-pill green">React + Vite</span>
+            <span class="tech-pill green">TailwindCSS</span>
+            <span class="tech-pill green">Recharts</span>
+            <span class="tech-pill gold">SHA-256 Chain</span>
+            <span class="tech-pill gold">AES-256</span>
+            <span class="tech-pill">WebSockets</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SPRINT PLAN -->
+  <div style="padding:2.5rem 0; border-bottom:1px solid var(--rule); animation:fadeIn 1s 0.6s ease both;">
+    <span class="section-kicker">The Build Plan</span>
+    <h2 class="section-hed">8 Hours. 4 Phases. One Working Product.</h2>
+    <table class="sprint-table">
+      <thead><tr><th>Time</th><th>Phase</th><th>What Gets Built</th><th>Who</th></tr></thead>
+      <tbody>
+        <tr><td>Hr 0–2</td><td>Foundation</td><td>FastAPI skeleton, PostgreSQL schema, JWT auth, mock data seeded (100 records, 5 users, 3 roles)</td><td>Backend</td></tr>
+        <tr><td>Hr 2–4</td><td>Core Engines</td><td>SHA-256 hash chain live, PII anonymizer running, Isolation Forest trained, WebSocket alerts working</td><td>Backend + ML</td></tr>
+        <tr><td>Hr 4–6</td><td>Dashboard</td><td>React UI: audit log table, access heatmap, live alert panel, risk scores, hash integrity verifier</td><td>Frontend</td></tr>
+        <tr><td>Hr 6–8</td><td>Demo + Polish</td><td>Full demo scenario scripted, tamper-proof visual, anomaly simulation ready, pitch rehearsed</td><td>All</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- DEMO STORY -->
+  <div style="padding:2.5rem 0; border-bottom:1px solid var(--rule); animation:fadeIn 1s 0.7s ease both;">
+    <span class="section-kicker">The Demo — This Is What Wins</span>
+    <h2 class="section-hed red">Tell a Story. Judges Feel It.</h2>
+    <div class="editorial" style="border:none; padding:0; animation:none;">
+      <div>
+        <p>The demo is not a feature walkthrough. It is a <strong>three-act drama</strong> judges will remember when they vote.</p>
+        <p><strong>Act 1 — Normal World:</strong> Login as employee. Access 3–4 records normally. Dashboard shows clean log, risk scores all green. <em>"This is a normal Monday morning."</em></p>
+        <p><strong>Act 2 — The Threat:</strong> Switch to attacker mode. Script triggers bulk access — 400 records in 90 seconds. <em>Pause. Let the room sit in silence for one beat.</em></p>
+        <p><strong>Act 3 — The Catch:</strong> Alert fires live. Risk score slams to CRITICAL. Show the hash chain — intact, immutable, undeniable. <em>"This is what accountability looks like."</em></p>
+      </div>
+      <div class="sidebar-box" style="align-self:start;">
+        <div class="sb-title">Why Judges Remember This</div>
+        <ul>
+          <li><span class="bullet">→</span>Narrative arc — not a feature list</li>
+          <li><span class="bullet">→</span>Real-time drama — the alert fires live</li>
+          <li><span class="bullet">→</span>Visual proof — hash chain on screen</li>
+          <li><span class="bullet">→</span>Emotional beat — "this happened to real companies"</li>
+          <li><span class="bullet">→</span>Zero ambiguity about what the product does</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- WHY IT WINS -->
+  <div style="padding:2.5rem 0; border-bottom:1px solid var(--rule); animation:fadeIn 1s 0.8s ease both;">
+    <span class="section-kicker">Why This Wins</span>
+    <h2 class="section-hed">Six Reasons. No Argument.</h2>
+    <div class="win-grid">
+      <div class="win-cell"><div class="wc-num">01</div><div class="wc-title">Covers All 3 Focus Areas</div><p>Financial security, healthcare anonymization, transparent audit trails — one system. Judges cannot find a gap.</p></div>
+      <div class="win-cell"><div class="wc-num">02</div><div class="wc-title">AI Is Genuine, Not Cosmetic</div><p>Isolation Forest is a real ML model solving a real problem — not a ChatGPT API call slapped onto a form.</p></div>
+      <div class="win-cell"><div class="wc-num">03</div><div class="wc-title">Crypto Proof Sets You Apart</div><p>Hash chains are a hard differentiator. Other teams build dashboards. You build mathematical evidence.</p></div>
+      <div class="win-cell"><div class="wc-num">04</div><div class="wc-title">Looks Enterprise-Grade</div><p>Drop-in proxy. Zero changes to existing systems. Any bank or hospital deploys this tomorrow. That's a product.</p></div>
+      <div class="win-cell"><div class="wc-num">05</div><div class="wc-title">Demo Is Unforgettable</div><p>Real-time alert. Live risk score. Visual chain. Three-act story. Judges feel the problem before you explain the solution.</p></div>
+      <div class="win-cell"><div class="wc-num">06</div><div class="wc-title">Survives 8 Hours</div><p>Each module is independently demoable. Even if time runs short, proxy + chain alone wins. No risk of shipping nothing.</p></div>
+    </div>
+  </div>
+
+  <!-- FINAL PITCH -->
+  <div style="padding:3rem 0 1rem; text-align:center; animation:fadeIn 1s 0.9s ease both;">
+    <div style="font-family:'DM Mono',monospace; font-size:0.6rem; letter-spacing:0.2em; color:var(--muted); text-transform:uppercase; margin-bottom:1.2rem;">Your One-Line Pitch to Judges</div>
+    <div style="font-family:'Bebas Neue',sans-serif; font-size:clamp(1.6rem, 4.5vw, 2.8rem); color:var(--ink); line-height:1.2; max-width:700px; margin:0 auto;">
+      "We built the flight recorder for enterprise data — so that when the breach happens, <span style="color:var(--red)">the truth cannot be erased."</span>
+    </div>
+  </div>
+
+  <footer>
+    <span>TrustLedger · Samhita 2026</span>
+    <span>Trust &amp; Privacy in Enterprise Systems</span>
+    <span>March 7, 2026 · 8-Hour Sprint</span>
+  </footer>
+
+</div>
+</body>
+</html>

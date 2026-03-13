@@ -1,0 +1,17 @@
+--- USERS ---
+admin@example.com | 69aecc3a0b95fc8ad8c76af5 | joinedClubs: []
+john@example.com | 69aecc3a0b95fc8ad8c76af7 | joinedClubs: []
+
+--- CLUBS ---
+Tech Club | 69aecc3a0b95fc8ad8c76af9 | members: []
+Drama Society | 69aecc3a0b95fc8ad8c76afb | members: []
+Sports Club | 69aecc3a0b95fc8ad8c76afd | members: []
+Art Circle | 69aecc3a0b95fc8ad8c76aff | members: []
+Music Band | 69aecc3a0b95fc8ad8c76b01 | members: []
+Debate Club | 69aecc3a0b95fc8ad8c76b03 | members: []
+photo club | 69af9a7f86911bdf156a647e | members: []
+muthamil mandram | 69af9aef86911bdf156a649a | members: []
+
+--- REQUESTS ---
+arunprasath.bt23@bitsathy.ac.in | status: pending | clubId: 1 | clubName: Tech Club
+JOHN84378@gmail.com | status: approved | clubId: 2 | clubName: Drama Society
