@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
+import api from '../services/api';
 import ClubCard from '../components/ClubCard';
 import RequestModal from '../components/RequestModal';
 
@@ -12,7 +12,7 @@ const Clubs = () => {
     useEffect(() => {
         const fetchClubs = async () => {
             try {
-                const res = await axios.get('http://localhost:5000/api/clubs');
+                const res = await api.get('/clubs');
                 setClubs(res.data);
             } catch (err) {
                 console.error(err);
@@ -30,7 +30,7 @@ const Clubs = () => {
         try {
             console.log('Submitting join request for:', selectedClub.name, formData);
             
-            await axios.post('http://localhost:5000/api/clubs/join-request', {
+            await api.post('/clubs/join-request', {
                 clubId: selectedClub._id,
                 clubName: selectedClub.name,
                 ...formData

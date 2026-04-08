@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
-import axios from 'axios';
+import api from '../services/api';
 import AuthContext from '../context/AuthContext';
 import AdminSidebar from '../components/AdminSidebar';
 
@@ -12,7 +12,7 @@ const AdminDashboard = () => {
     useEffect(() => {
         const fetchSummary = async () => {
             try {
-                const res = await axios.get('http://localhost:5000/api/analytics/summary');
+                const res = await api.get('/analytics/summary');
                 setSummary(res.data);
                 setLoading(false);
             } catch (err) {
@@ -209,7 +209,7 @@ const AdminClubsView = () => {
 
     const fetchClubs = async () => {
         try {
-            const res = await axios.get('http://localhost:5000/api/clubs');
+            const res = await api.get('/clubs');
             setClubs(res.data);
             setLoading(false);
         } catch (err) {
@@ -226,10 +226,8 @@ const AdminClubsView = () => {
         e.preventDefault();
         setCreateLoading(true);
         try {
-            const token = localStorage.getItem('token');
-            await axios.post('http://localhost:5000/api/clubs', 
-                { name: clubName, description: clubDesc, category: clubCat },
-                { headers: { Authorization: `Bearer ${token}` } }
+            await api.post('/clubs', 
+                { name: clubName, description: clubDesc, category: clubCat }
             );
             
             setClubName('');
@@ -258,10 +256,8 @@ const AdminClubsView = () => {
         e.preventDefault();
         setUpdateLoading(true);
         try {
-            const token = localStorage.getItem('token');
-            await axios.put(`http://localhost:5000/api/clubs/${editingClub._id}`, 
-                { name: editName, description: editDesc, category: editCat },
-                { headers: { Authorization: `Bearer ${token}` } }
+            await api.put(`/clubs/${editingClub._id}`, 
+                { name: editName, description: editDesc, category: editCat }
             );
             
             setIsEditModalOpen(false);
@@ -282,10 +278,7 @@ const AdminClubsView = () => {
         }
 
         try {
-            const token = localStorage.getItem('token');
-            await axios.delete(`http://localhost:5000/api/clubs/${id}`, {
-                headers: { Authorization: `Bearer ${token}` }
-            });
+            await api.delete(`/clubs/${id}`);
             fetchClubs();
             alert('Club deleted successfully.');
         } catch (err) {
@@ -568,10 +561,7 @@ const AdminEventsView = () => {
 
     const fetchRegistrations = async () => {
         try {
-            const token = localStorage.getItem('token');
-            const res = await axios.get('http://localhost:5000/api/events/registrations', {
-                headers: { Authorization: `Bearer ${token}` }
-            });
+            const res = await api.get('/events/registrations');
             setRegistrations(res.data);
             setLoading(false);
         } catch (err) {
@@ -693,7 +683,7 @@ const AdminMembersView = ({ setActiveTab }) => {
 
     const fetchRequests = async () => {
         try {
-            const res = await axios.get('http://localhost:5000/api/clubs/join-request/all'); 
+            const res = await api.get('/clubs/join-request/all'); 
             setRequests(res.data);
             setLoading(false);
         } catch (err) {
@@ -708,10 +698,8 @@ const AdminMembersView = ({ setActiveTab }) => {
 
     const handleAction = async (id, status) => {
         try {
-            const token = localStorage.getItem('token');
-            const res = await axios.put(`http://localhost:5000/api/clubs/join-request/${id}`, 
-                { status },
-                { headers: { Authorization: `Bearer ${token}` } }
+            const res = await api.put(`/clubs/join-request/${id}`, 
+                { status }
             );
             alert(res.data.msg || `Request ${status} successfully`);
             fetchRequests(); // Refresh the list
@@ -826,7 +814,7 @@ const AdminAnnouncementsView = ({ adminId }) => {
     useEffect(() => {
         const fetchAnnouncements = async () => {
             try {
-                const res = await axios.get('http://localhost:5000/api/announcements');
+                const res = await api.get('/announcements');
                 setAnnouncements(res.data);
             } catch (err) {
                 console.error(err);
@@ -838,10 +826,8 @@ const AdminAnnouncementsView = ({ adminId }) => {
     const handleCreateAnnouncement = async (e) => {
         e.preventDefault();
         try {
-            const token = localStorage.getItem('token');
-            const res = await axios.post('http://localhost:5000/api/announcements',
-                { title, content, createdBy: adminId },
-                { headers: { Authorization: `Bearer ${token}` } }
+            const res = await api.post('/announcements',
+                { title, content, createdBy: adminId }
             );
             alert('Announcement posted successfully!');
             setMessage('Announcement posted!');
@@ -913,7 +899,7 @@ const EventForm = () => {
     useEffect(() => {
         const fetchClubs = async () => {
             try {
-                const res = await axios.get('http://localhost:5000/api/clubs');
+                const res = await api.get('/clubs');
                 setClubs(res.data);
             } catch (err) {
                 console.error(err);
@@ -925,10 +911,8 @@ const EventForm = () => {
     const handleCreateEvent = async (e) => {
         e.preventDefault();
         try {
-            const token = localStorage.getItem('token');
-            await axios.post('http://localhost:5000/api/events',
-                { title, description: desc, date, clubId },
-                { headers: { Authorization: `Bearer ${token}` } }
+            await api.post('/events',
+                { title, description: desc, date, clubId }
             );
             setMessage('Event created successfully!');
             setTitle('');

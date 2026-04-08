@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
+import api from '../services/api';
 
 const Announcements = () => {
     const [announcements, setAnnouncements] = useState([]);
@@ -8,7 +8,7 @@ const Announcements = () => {
     useEffect(() => {
         const fetchAnnouncements = async () => {
             try {
-                const res = await axios.get('http://localhost:5000/api/announcements');
+                const res = await api.get('/announcements');
                 setAnnouncements(res.data);
                 setLoading(false);
             } catch (err) {

@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useContext } from 'react';
-import axios from 'axios';
+import api from '../services/api';
 import { useNavigate } from 'react-router-dom';
 import EventCard from '../components/EventCard';
 import RequestModal from '../components/RequestModal';
@@ -23,11 +23,11 @@ const Home = () => {
 
         const fetchData = async () => {
             try {
-                const clubsRes = await axios.get('http://localhost:5000/api/clubs');
+                const clubsRes = await api.get('/clubs');
                 setClubs(clubsRes.data);
-                const eventsRes = await axios.get('http://localhost:5000/api/events');
+                const eventsRes = await api.get('/events');
                 setEvents(eventsRes.data);
-                const annRes = await axios.get('http://localhost:5000/api/announcements');
+                const annRes = await api.get('/announcements');
                 setAnnouncements(annRes.data.slice(0, 3)); // Only show latest 3
             } catch (err) {
                 console.error(err);
@@ -51,14 +51,14 @@ const Home = () => {
     const handleFormSubmit = async (formData) => {
         try {
             if (modalType === 'club') {
-                await axios.post('http://localhost:5000/api/clubs/join-request', {
+                await api.post('/clubs/join-request', {
                     clubId: selectedItem._id,
                     clubName: selectedItem.name,
                     ...formData
                 });
                 alert(`Request to join ${selectedItem.name} submitted successfully!`);
             } else {
-                await axios.post('http://localhost:5000/api/events/register', {
+                await api.post('/events/register', {
                     eventId: selectedItem._id,
                     eventTitle: selectedItem.title,
                     ...formData
