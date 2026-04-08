@@ -10,10 +10,10 @@ const ClubCard = ({ club, onJoin }) => {
         <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-100 hover:shadow-md transition-shadow flex flex-col justify-between h-full">
             <div>
                 <div className="flex justify-between items-center mb-2">
-                    <h3 className="text-lg font-bold text-gray-800">{club.name}</h3>
+                    <h3 className="text-lg font-bold text-gray-800">{club.name || 'Unnamed Club'}</h3>
                     <span className="text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded-full">{club.category || 'Club'}</span>
                 </div>
-                <p className="text-gray-600 text-sm mb-4 line-clamp-3">{club.description}</p>
+                <p className="text-gray-600 text-sm mb-4 line-clamp-3">{club.description || 'No description available for this club.'}</p>
 
                 <div className="flex items-center space-x-4 text-sm text-gray-500 mb-6">
                     <div className="flex items-center">

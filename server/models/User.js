@@ -20,9 +20,27 @@ const UserSchema = new mongoose.Schema({
         enum: ['student', 'admin'],
         default: 'student'
     },
+    registerNumber: {
+        type: String,
+        default: ''
+    },
+    department: {
+        type: String,
+        default: ''
+    },
     joinedClubs: [{
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Club'
+        club: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'Club'
+        },
+        role: {
+            type: String,
+            default: 'Member'
+        },
+        joinedAt: {
+            type: Date,
+            default: Date.now
+        }
     }]
 }, { timestamps: true });
 

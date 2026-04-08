@@ -8,6 +8,8 @@ const connectDB = require('./config/db');
 const app = express();
 const PORT = process.env.PORT || 5000;
 
+const path = require('path');
+
 // Middleware
 app.use(cors());
 app.use(express.json());
@@ -19,9 +21,19 @@ app.use('/api/events', require('./routes/events'));
 app.use('/api/analytics', require('./routes/analytics'));
 app.use('/api/announcements', require('./routes/announcements'));
 
-app.get('/', (req, res) => {
-    res.send('API is running (Dummy Data Mode Enabled)...');
-});
+// Serve Static Assets in Production
+if (process.env.NODE_ENV === 'production') {
+    // Set static folder
+    app.use(express.static(path.join(__dirname, '../client/dist')));
+
+    app.use((req, res) => {
+        res.sendFile(path.resolve(__dirname, '../client', 'dist', 'index.html'));
+    });
+} else {
+    app.get('/', (req, res) => {
+        res.send('API is running (Development Mode)...');
+    });
+}
 
 /**
  * Async startup sequence. 

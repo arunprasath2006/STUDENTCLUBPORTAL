@@ -95,7 +95,28 @@ router.post('/login', async (req, res) => {
 // @access  Private
 router.get('/user', auth, async (req, res) => {
     try {
-        const user = await User.findById(req.user.id).select('-password');
+        const user = await User.findById(req.user.id).select('-password').populate('joinedClubs.club');
+        res.json(user);
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).send('Server Error');
+    }
+});
+
+// @route   PUT api/auth/profile
+// @desc    Update user profile
+// @access  Private
+router.put('/profile', auth, async (req, res) => {
+    const { username, registerNumber, department } = req.body;
+    try {
+        let user = await User.findById(req.user.id);
+        if (!user) return res.status(404).json({ msg: 'User not found' });
+
+        if (username) user.username = username;
+        if (registerNumber) user.registerNumber = registerNumber;
+        if (department) user.department = department;
+
+        await user.save();
         res.json(user);
     } catch (err) {
         console.error(err.message);

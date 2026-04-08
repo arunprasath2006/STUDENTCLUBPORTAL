@@ -10,6 +10,11 @@ app.use(express.json());
 
 // Routes
 app.use('/api/users', require('./routes/userRoutes'));
+app.use('/api/auth', require('./routes/auth'));
+app.use('/api/clubs', require('./routes/clubs'));
+app.use('/api/events', require('./routes/events'));
+app.use('/api/announcements', require('./routes/announcements'));
+app.use('/api/analytics', require('./routes/analytics'));
 
 // Start Server after DB connection
 const startServer = async () => {

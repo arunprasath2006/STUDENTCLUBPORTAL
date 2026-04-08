@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
+import api from '../services/api';
 import EventCard from '../components/EventCard';
 import RequestModal from '../components/RequestModal';
 
@@ -12,7 +12,7 @@ const Events = () => {
     useEffect(() => {
         const fetchEvents = async () => {
             try {
-                const res = await axios.get('http://localhost:5000/api/events');
+                const res = await api.get('/events');
                 setEvents(res.data);
             } catch (err) {
                 console.error(err);
@@ -30,7 +30,7 @@ const Events = () => {
         try {
             console.log('Submitting registration for:', selectedEvent.title, formData);
             
-            await axios.post('http://localhost:5000/api/events/register', {
+            await api.post('/events/register', {
                 eventId: selectedEvent._id,
                 eventTitle: selectedEvent.title,
                 ...formData

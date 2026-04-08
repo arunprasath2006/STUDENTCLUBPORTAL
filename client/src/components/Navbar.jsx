@@ -12,6 +12,10 @@ const Navbar = () => {
         navigate('/login');
     };
 
+    if (user?.role === 'admin' && location.pathname.startsWith('/admin')) {
+        return null;
+    }
+
     const isActive = (path) => {
         return location.pathname === path ? "text-black border-b-2 border-black pb-1" : "text-gray-500 hover:text-black";
     }
@@ -22,16 +26,20 @@ const Navbar = () => {
                 <div className="flex items-center space-x-8">
                     {/* Brand Link replaced with simple text if admin or student name if logged in */}
                     <Link to={user ? (user.role === 'admin' ? '/admin' : '/home') : '/'} className="text-xl font-bold text-blue-600">
-                        {user ? user.username.split(' ')[0] : 'Campus'} Portal
+                        {user ? `${user.username.split(' ')[0]} Portal` : 'Campus Portal'}
                     </Link>
 
-                    {!location.pathname.startsWith('/admin') && (
+                    {user && (
                         <div className="hidden md:flex space-x-6 text-sm font-medium">
-                            <Link to="/home" className={isActive('/home')}>Home</Link>
-                            <Link to="/clubs" className={isActive('/clubs')}>Clubs</Link>
-                            <Link to="/events" className={isActive('/events')}>Events</Link>
-                            <Link to="/profile" className={isActive('/profile')}>Profile</Link>
-                            {user && user.role === 'admin' && (
+                                <>
+                                    <Link to="/home" className={isActive('/home')}>Home</Link>
+                                    <Link to="/announcements" className={isActive('/announcements')}>Announcements</Link>
+                                    <Link to="/clubs" className={isActive('/clubs')}>Clubs</Link>
+                                    <Link to="/events" className={isActive('/events')}>Events</Link>
+                                    <Link to="/profile" className={isActive('/profile')}>Profile</Link>
+                                </>
+
+                            {user.role === 'admin' && (
                                 <Link to="/admin" className={isActive('/admin')}>Admin Panel</Link>
                             )}
                         </div>

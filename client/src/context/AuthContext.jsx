@@ -1,5 +1,5 @@
 import React, { createContext, useState, useEffect } from 'react';
-import axios from 'axios';
+import api from '../services/api';
 
 const AuthContext = createContext();
 
@@ -12,9 +12,7 @@ export const AuthProvider = ({ children }) => {
             const token = localStorage.getItem('token');
             if (token) {
                 try {
-                    const res = await axios.get('http://localhost:5000/api/auth/user', {
-                        headers: { Authorization: `Bearer ${token}` }
-                    });
+                    const res = await api.get('/auth/user');
                     setUser(res.data);
                 } catch (err) {
                     localStorage.removeItem('token');
@@ -26,16 +24,34 @@ export const AuthProvider = ({ children }) => {
         checkLoggedIn();
     }, []);
 
+    const loadUser = async () => {
+        const token = localStorage.getItem('token');
+        if (token) {
+            try {
+                const res = await api.get('/auth/user');
+                setUser(res.data);
+            } catch (err) {
+                localStorage.removeItem('token');
+                setUser(null);
+            }
+        }
+    };
+
     const login = async (email, password) => {
-        const res = await axios.post('http://localhost:5000/api/auth/login', { email, password });
+        const res = await api.post('/auth/login', { email, password });
         localStorage.setItem('token', res.data.token);
-        setUser(res.data.user);
+        await loadUser();
     };
 
     const register = async (username, email, password) => {
-        const res = await axios.post('http://localhost:5000/api/auth/register', { username, email, password });
+        const res = await api.post('/auth/register', { username, email, password });
         localStorage.setItem('token', res.data.token);
-        setUser(res.data.user); // Assuming register returns token and user, verify backend
+        await loadUser();
+    };
+
+    const updateProfile = async (profileData) => {
+        const res = await api.put('/auth/profile', profileData);
+        setUser(res.data);
     };
 
     const logout = () => {
@@ -44,7 +60,7 @@ export const AuthProvider = ({ children }) => {
     };
 
     return (
-        <AuthContext.Provider value={{ user, login, register, logout, loading }}>
+        <AuthContext.Provider value={{ user, login, register, logout, loading, loadUser, updateProfile }}>
             {children}
         </AuthContext.Provider>
     );
