@@ -21,14 +21,21 @@ app.use('/api/events', require('./routes/events'));
 app.use('/api/analytics', require('./routes/analytics'));
 app.use('/api/announcements', require('./routes/announcements'));
 
+const fs = require('fs');
 // Serve Static Assets in Production
 if (process.env.NODE_ENV === 'production') {
-    // Set static folder
-    app.use(express.static(path.join(__dirname, '../client/dist')));
-
-    app.use((req, res) => {
-        res.sendFile(path.resolve(__dirname, '../client', 'dist', 'index.html'));
-    });
+    const staticPath = path.join(__dirname, '../client/dist');
+    if (fs.existsSync(staticPath)) {
+        app.use(express.static(staticPath));
+        app.use((req, res) => {
+            res.sendFile(path.resolve(staticPath, 'index.html'));
+        });
+    } else {
+        // Backend-only deployment mode fallback
+        app.get('/', (req, res) => {
+            res.json({ msg: 'Student Portal API is running in backend-only production mode.' });
+        });
+    }
 } else {
     app.get('/', (req, res) => {
         res.send('API is running (Development Mode)...');
