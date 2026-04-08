@@ -45,10 +45,13 @@ const Clubs = () => {
         }
     };
 
-    const filteredClubs = clubs.filter(club =>
-        club.name.toLowerCase().includes(search.toLowerCase()) ||
-        club.description.toLowerCase().includes(search.toLowerCase())
-    );
+    const filteredClubs = clubs.filter(club => {
+        if (!club) return false;
+        const name = club.name || '';
+        const description = club.description || '';
+        return name.toLowerCase().includes(search.toLowerCase()) ||
+               description.toLowerCase().includes(search.toLowerCase());
+    });
 
     return (
         <div className="py-8">

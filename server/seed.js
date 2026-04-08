@@ -8,8 +8,12 @@ const bcrypt = require('bcryptjs');
 dotenv.config();
 
 const users = [
-    { username: 'admin', email: 'admin@example.com', password: 'password', role: 'admin' },
+    { username: 'admin', email: 'admin@gmail.com', password: 'password', role: 'admin' },
     { username: 'john_doe', email: 'john@example.com', password: 'password', role: 'student' },
+    { username: 'alice', email: 'alice@example.com', password: 'password', role: 'student' },
+    { username: 'bob', email: 'bob@example.com', password: 'password', role: 'student' },
+    { username: 'charlie', email: 'charlie@example.com', password: 'password', role: 'student' },
+    { username: 'david', email: 'david@example.com', password: 'password', role: 'student' },
 ];
 
 const clubs = [

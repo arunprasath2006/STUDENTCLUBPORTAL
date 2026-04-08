@@ -65,4 +65,18 @@ router.post('/register', async (req, res) => {
     }
 });
 
+// @route   GET api/events/registrations
+// @desc    Get all event registrations
+// @access  Private/Admin
+router.get('/registrations', auth, async (req, res) => {
+    try {
+        const registrations = await EventRegistration.find().sort({ createdAt: -1 });
+        console.log(`📊 Admin fetched ${registrations.length} event registrations`);
+        res.json(registrations);
+    } catch (err) {
+        console.error('❌ Error fetching registrations:', err.message);
+        res.status(500).send('Server Error');
+    }
+});
+
 module.exports = router;

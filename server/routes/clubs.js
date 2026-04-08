@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+const mongoose = require('mongoose');
 const auth = require('../middleware/auth');
 const Club = require('../models/Club');
 const User = require('../models/User');
@@ -94,11 +95,18 @@ router.get('/join-request/user/:email', async (req, res) => {
 router.put('/join-request/:id', auth, async (req, res) => {
     try {
         const { status } = req.body;
+        
+        if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
+            return res.status(400).json({ msg: 'Invalid request ID format' });
+        }
+
         const request = await JoinRequest.findById(req.params.id);
 
         if (!request) {
             return res.status(404).json({ msg: 'Request not found' });
         }
+
+        console.log(`Processing ${status} for request: ${req.params.id} (${request.name})`);
 
         request.status = status;
         await request.save();
@@ -112,27 +120,116 @@ router.put('/join-request/:id', auth, async (req, res) => {
             if (user) {
                 console.log(`✅ Updating membership for user: ${user.email} in club: ${request.clubName}`);
                 
-                // Add club to user's joinedClubs using addToSet (handles duplicates and casting)
-                user.joinedClubs.addToSet(request.clubId);
+                // Ensure clubId is valid ObjectId
+                let clubIdObj;
+                try {
+                    clubIdObj = new mongoose.Types.ObjectId(request.clubId);
+                } catch (e) {
+                    console.error(`❌ Invalid clubId in request: ${request.clubId}`);
+                    return res.status(400).json({ msg: 'Invalid club ID in request' });
+                }
+
+                // Check if already a member to prevent duplicates
+                const isAlreadyMember = user.joinedClubs.some(
+                    jc => jc.club && jc.club.toString() === clubIdObj.toString()
+                );
+
+                if (!isAlreadyMember) {
+                    // Add club to user's joinedClubs
+                    user.joinedClubs.push({
+                        club: clubIdObj,
+                        role: 'Member',
+                        joinedAt: new Date()
+                    });
+                    console.log(`✅ Added ${request.clubName} to user's joinedClubs`);
+                } else {
+                    console.log(`ℹ️ User is already a member of ${request.clubName}`);
+                }
+
+                // Sync profile data if missing
+                if ((!user.registerNumber || user.registerNumber === '') && request.registerNumber) {
+                    user.registerNumber = request.registerNumber;
+                }
+                if ((!user.department || user.department === '') && request.department) {
+                    user.department = request.department;
+                }
+
                 await user.save();
 
                 // Add user to club's members
-                const club = await Club.findById(request.clubId);
+                const club = await Club.findById(clubIdObj);
                 if (club) {
                     club.members.addToSet(user._id);
                     await club.save();
-                    console.log(`✅ User added to club members: ${club.name}`);
+                    console.log(`✅ User ID added to club members array: ${club.name}`);
                 } else {
                     console.error(`❌ Club not found during approval: ${request.clubId}`);
                 }
             } else {
                 console.error(`❌ User not found during approval: ${request.email}`);
+                // Optional: You might want to return an error here if the user must exist
+                // return res.status(404).json({ msg: 'Student user not found. They must register first.' });
             }
         }
 
-        res.json(request);
+        res.json({ msg: `Request ${status} successfully`, data: request });
     } catch (err) {
         console.error('❌ Error updating join request:', err.message);
+        res.status(500).json({ msg: 'Server Error', error: err.message });
+    }
+});
+
+// @route   PUT api/clubs/:id
+// @desc    Update a club
+router.put('/:id', auth, async (req, res) => {
+    try {
+        const user = await User.findById(req.user.id);
+        if (user.role !== 'admin') {
+            return res.status(403).json({ msg: 'Access denied: Admin only' });
+        }
+
+        const { name, description, category } = req.body;
+        const clubFields = {};
+        if (name) clubFields.name = name;
+        if (description) clubFields.description = description;
+        if (category) clubFields.category = category;
+
+        let club = await Club.findById(req.params.id);
+        if (!club) return res.status(404).json({ msg: 'Club not found' });
+
+        club = await Club.findByIdAndUpdate(
+            req.params.id,
+            { $set: clubFields },
+            { new: true }
+        );
+
+        res.json(club);
+    } catch (err) {
+        console.error('❌ Error updating club:', err.message);
+        res.status(500).send('Server Error');
+    }
+});
+
+// @route   DELETE api/clubs/:id
+// @desc    Delete a club
+router.delete('/:id', auth, async (req, res) => {
+    try {
+        const user = await User.findById(req.user.id);
+        if (user.role !== 'admin') {
+            return res.status(403).json({ msg: 'Access denied: Admin only' });
+        }
+
+        const club = await Club.findById(req.params.id);
+        if (!club) return res.status(404).json({ msg: 'Club not found' });
+
+        await Club.findByIdAndDelete(req.params.id);
+        
+        // Also clean up related join requests
+        await JoinRequest.deleteMany({ clubId: req.params.id });
+
+        res.json({ msg: 'Club removed' });
+    } catch (err) {
+        console.error('❌ Error deleting club:', err.message);
         res.status(500).send('Server Error');
     }
 });
